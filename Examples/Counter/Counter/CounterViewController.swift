@@ -19,17 +19,34 @@ final class CounterViewController: UIViewController, StoryboardView {
   @IBOutlet var valueLabel: UILabel!
   @IBOutlet var activityIndicatorView: UIActivityIndicatorView!
   var disposeBag = DisposeBag()
-
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        print("CounterViewController - init")
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        print("CounterViewController - init")
+        super.init(coder: coder)
+    }
+    
   // Called when the new value is assigned to `self.reactor`
   func bind(reactor: CounterViewReactor) {
+    print("CounterViewController - bind")
     // Action
     increaseButton.rx.tap               // Tap event
-      .map { Reactor.Action.increase }  // Convert to Action.increase
+      .map {
+        print("increaseButton tap")
+        return Reactor.Action.increase
+      }  // Convert to Action.increase
       .bind(to: reactor.action)         // Bind to reactor.action
       .disposed(by: disposeBag)
 
     decreaseButton.rx.tap
-      .map { Reactor.Action.decrease }
+      .map {
+        print("decreasButton tap")
+        return Reactor.Action.decrease
+      }
       .bind(to: reactor.action)
       .disposed(by: disposeBag)
 

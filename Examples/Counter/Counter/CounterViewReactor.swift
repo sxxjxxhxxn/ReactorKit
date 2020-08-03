@@ -32,6 +32,7 @@ final class CounterViewReactor: Reactor {
   let initialState: State
 
   init() {
+    print("CounterViewReactor - init")
     self.initialState = State(
       value: 0, // start from 0
       isLoading: false
@@ -40,8 +41,10 @@ final class CounterViewReactor: Reactor {
 
   // Action -> Mutation
   func mutate(action: Action) -> Observable<Mutation> {
+    print("CounterViewReactor - mutate")
     switch action {
     case .increase:
+        print("CounterViewReactor - mutate - increase action")
       return Observable.concat([
         Observable.just(Mutation.setLoading(true)),
         Observable.just(Mutation.increaseValue).delay(.milliseconds(500), scheduler: MainScheduler.instance),
@@ -49,6 +52,7 @@ final class CounterViewReactor: Reactor {
       ])
 
     case .decrease:
+        print("CounterViewReactor - mutate - decrease action")
       return Observable.concat([
         Observable.just(Mutation.setLoading(true)),
         Observable.just(Mutation.decreaseValue).delay(.milliseconds(500), scheduler: MainScheduler.instance),
@@ -59,6 +63,7 @@ final class CounterViewReactor: Reactor {
 
   // Mutation -> State
   func reduce(state: State, mutation: Mutation) -> State {
+    print("CounterViewReactor - reduce")
     var state = state
     switch mutation {
     case .increaseValue:
@@ -70,6 +75,9 @@ final class CounterViewReactor: Reactor {
     case let .setLoading(isLoading):
       state.isLoading = isLoading
     }
+    print("CounterViewReactor - reduce - state: ", state)
     return state
   }
+    
+//    transfo
 }

@@ -87,6 +87,7 @@ private enum MapTables {
 
 extension Reactor {
   private var _action: ActionSubject<Action> {
+    print("Reactor - _action")
     if self.isStubEnabled {
       return self.stub.action
     } else {
@@ -94,6 +95,7 @@ extension Reactor {
     }
   }
   public var action: ActionSubject<Action> {
+    print("Reactor - action")
     // Creates a state stream automatically
     _ = self._state
 
@@ -103,11 +105,16 @@ extension Reactor {
   }
 
   public internal(set) var currentState: State {
-    get { return MapTables.currentState.forceCastedValue(forKey: self, default: self.initialState) }
-    set { MapTables.currentState.setValue(newValue, forKey: self) }
+    get {
+        print("Reactor - currentState - get")
+        return MapTables.currentState.forceCastedValue(forKey: self, default: self.initialState) }
+    set {
+        print("Reactor - currentState - set")
+        MapTables.currentState.setValue(newValue, forKey: self) }
   }
 
   private var _state: Observable<State> {
+    print("Reactor - _state")
     if self.isStubEnabled {
       return self.stub.state.asObservable()
     } else {
@@ -115,6 +122,7 @@ extension Reactor {
     }
   }
   public var state: Observable<State> {
+    print("Reactor - state")
     // It seems that Swift has a bug in associated object when subclassing a generic class. This is
     // a temporary solution to bypass the bug. See #30 for details.
     return self._state
@@ -129,7 +137,10 @@ extension Reactor {
   }
 
   public func createStateStream() -> Observable<State> {
+    print("---------------------------")
+    print("Reactor - createStateStream")
     let action = self._action.observeOn(self.scheduler)
+    print("action: ", action)
     let transformedAction = self.transform(action: action)
     let mutation = transformedAction
       .flatMap { [weak self] action -> Observable<Mutation> in
@@ -144,32 +155,43 @@ extension Reactor {
       }
       .catchError { _ in .empty() }
       .startWith(self.initialState)
+    print("initialState: ", initialState)
+    print("state: ", state)
     let transformedState = self.transform(state: state)
       .do(onNext: { [weak self] state in
+        print("state: ", state)
         self?.currentState = state
       })
       .replay(1)
+    print("transformedState: ", transformedState)
+    print("transformedState.connect()")
     transformedState.connect().disposed(by: self.disposeBag)
+    print("---------------------------")
     return transformedState
   }
 
   public func transform(action: Observable<Action>) -> Observable<Action> {
+    print("Reactor - transform(action:")
     return action
   }
 
   public func mutate(action: Action) -> Observable<Mutation> {
+    print("Reactor - mutate(action:")
     return .empty()
   }
 
   public func transform(mutation: Observable<Mutation>) -> Observable<Mutation> {
+    print("Reactor - transform(mutation:")
     return mutation
   }
 
   public func reduce(state: State, mutation: Mutation) -> State {
+    print("Reactor - reduce(state: , muatation:")
     return state
   }
 
   public func transform(state: Observable<State>) -> Observable<State> {
+    print("Reactor - transform(state:")
     return state
   }
 }

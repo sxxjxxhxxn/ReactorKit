@@ -28,6 +28,8 @@ extension StoryboardView {
   public var reactor: Reactor? {
     get { return MapTables.reactor.value(forKey: self) as? Reactor }
     set {
+        print(reactor)
+        print("StoryboardView의 reactor set")
       MapTables.reactor.setValue(newValue, forKey: self)
       self.isReactorBinded = false
       self.disposeBag = DisposeBag()
@@ -41,9 +43,17 @@ extension StoryboardView {
   }
 
   public func performBinding() {
-    guard let reactor = self.reactor else { return }
-    guard !self.isReactorBinded else { return }
-    guard !self.shouldDeferBinding(reactor: reactor) else { return }
+    print("StoryboardView - performBinding")
+    guard let reactor = self.reactor else {
+        print("reactor nil이라 컷")
+        return }
+    guard !self.isReactorBinded else {
+        print("이미 바인딩 돼있어서 컷")
+        return }
+    guard !self.shouldDeferBinding(reactor: reactor) else {
+        print("shouldDeferBinding이 true라서 컷")
+        return }
+    print("bind 호출")
     self.bind(reactor: reactor)
     self.isReactorBinded = true
   }

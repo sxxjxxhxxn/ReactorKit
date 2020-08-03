@@ -53,8 +53,11 @@ public protocol View: class {
 
 extension View {
   public var reactor: Reactor? {
-    get { return MapTables.reactor.value(forKey: self) as? Reactor }
+    get {
+        print("View에서 reactor get")
+        return MapTables.reactor.value(forKey: self) as? Reactor }
     set {
+        print("View의 reactor set")
       MapTables.reactor.setValue(newValue, forKey: self)
       self.disposeBag = DisposeBag()
       if let reactor = newValue {
