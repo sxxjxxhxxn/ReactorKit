@@ -22,6 +22,8 @@ final class CounterViewController: UIViewController, StoryboardView {
 
   // Called when the new value is assigned to `self.reactor`
   func bind(reactor: CounterViewReactor) {
+    print("VC - bind")
+    print("-------------")
     // Action
     increaseButton.rx.tap               // Tap event
       .map { Reactor.Action.increase }  // Convert to Action.increase
@@ -45,4 +47,14 @@ final class CounterViewController: UIViewController, StoryboardView {
       .bind(to: activityIndicatorView.rx.isAnimating)
       .disposed(by: disposeBag)
   }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        print("VC - init")
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        print("VC - init")
+        super.init(coder: coder)
+    }
 }

@@ -32,6 +32,7 @@ final class CounterViewReactor: Reactor {
   let initialState: State
 
   init() {
+    print("Reactor - init")
     self.initialState = State(
       value: 0, // start from 0
       isLoading: false
@@ -40,6 +41,7 @@ final class CounterViewReactor: Reactor {
 
   // Action -> Mutation
   func mutate(action: Action) -> Observable<Mutation> {
+    print("Reactor - mutate: ", action)
     switch action {
     case .increase:
       return Observable.concat([
@@ -59,6 +61,7 @@ final class CounterViewReactor: Reactor {
 
   // Mutation -> State
   func reduce(state: State, mutation: Mutation) -> State {
+    print("Reactor - reduce: ", state, " mutation: ", mutation)
     var state = state
     switch mutation {
     case .increaseValue:

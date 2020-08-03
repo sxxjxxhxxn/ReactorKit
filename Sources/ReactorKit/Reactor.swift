@@ -129,6 +129,7 @@ extension Reactor {
   }
 
   public func createStateStream() -> Observable<State> {
+    print("Reactor - createStateStream")
     let action = self._action.observeOn(self.scheduler)
     let transformedAction = self.transform(action: action)
     let mutation = transformedAction
